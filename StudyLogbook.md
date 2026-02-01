@@ -1,14 +1,4 @@
 
-
-Topic: SQL Injection
-    Lab 1: SQL injection vulnerability in WHERE clause allowing retrieval of hidden data
-	Reflection-
-From this lab, I learned how a simple SQL injection in a WHERE clause can expose hidden data by manipulating query logic. It helped me understand how user input is directly combined into SQL queries and why that is dangerous. The most challenging part was figuring out the correct payload syntax, especially handling quotes and comments without causing server errors. This lab improved my confidence in identifying injection points and thinking logically about how backend queries work.
-
-    Lab 2: SQL injection vulnerability allowing login bypass
-	Reflection-
-From this lab, I learned how SQL injection can be used to bypass authentication by manipulating the logic of a login query. It showed me how commenting out part of an SQL statement can completely ignore password checks and grant unauthorized access. The most challenging part was understanding why a small input like a single quote and a comment operator could break the entire security mechanism. This lab made the importance of secure query handling very clear to me.
-
 ## Topic: SQL Injection
 
 ### Lab 1: SQL Injection Vulnerability in WHERE Clause Allowing Retrieval of Hidden Data
