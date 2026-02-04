@@ -1,4 +1,4 @@
-
+`zzz
 ## Topic: SQL Injection
 
 ### Lab 1: SQL Injection Vulnerability in WHERE Clause Allowing Retrieval of Hidden Data
@@ -28,3 +28,15 @@ From this lab, I learned how small differences in authentication error messages 
 
 **Reflection**  
 From this lab, I learned that implementing 2FA alone is not enough if it is not properly enforced on the server side. I saw how an authentication flow can be bypassed simply by directly accessing a protected endpoint without completing the 2FA step. The most challenging part was realizing that no technical attack was needed, only an understanding of the login logic. This lab highlighted how small logical flaws can completely break authentication security.
+
+
+
+
+## Booking System – Phase 1
+
+- Set up the Booking System locally using Docker Compose.
+- Verified application access and registration functionality.
+- Performed manual penetration testing on the registration page.
+- Identified validation and access control issues.
+- Ran automated security scanning using OWASP ZAP.
+- 
