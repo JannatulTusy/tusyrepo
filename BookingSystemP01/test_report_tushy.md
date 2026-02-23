@@ -174,3 +174,20 @@ The most critical issue identified was unrestricted administrator role assignmen
 Additional findings included weak password enforcement, improper input validation feedback, and flawed email uniqueness handling.  
 These issues should be addressed to improve the security and reliability of the system.
 
+---
+
+## Topic: Access Control
+
+### Lab 1: Unprotected Admin Functionality
+
+**Reflection**  
+From this lab, I learned that hiding an admin URL does not provide real security. The admin panel was accessible through `/administrator-panel` without proper authentication or authorization checks. By checking `robots.txt`, I was able to discover the hidden path and access the admin functionality. This lab reinforced the importance of enforcing proper server-side authentication and authorization instead of relying on obscurity.
+
+---
+
+### Lab 2: Unprotected Admin Functionality with Unpredictable URL
+
+**Reflection**  
+From this lab, I learned that making an admin URL unpredictable does not make it secure. The admin panel was hidden inside the page source as `/admin-lec6ls`, but it was still accessible without any authentication or authorization checks. By inspecting the HTML source, I was able to discover the hidden endpoint and access the admin functionality. This lab reinforced the idea that security must be enforced server-side, and relying on obscurity alone leads to broken access control vulnerabilities.
+
+---
