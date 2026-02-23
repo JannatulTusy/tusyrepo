@@ -1,177 +1,72 @@
-# Booking System – Phase 1 Manual Penetration Test Report
+# 1️⃣ Introduction
 
-## Tester Information
-- Name: Tushy Ahmed
-- Course: Cybersecurity and Data Privacy
-- Assignment: Booking System – Phase 1
-- Testing Type: Manual Black-Box Testing
+**Tester(s):**
+- Name: Jannatul Tushy
 
----
+**Purpose:**
+- Identify security vulnerabilities and weaknesses in the registration functionality of the Booking System application (Phase 1).
 
-## Scope of Testing
-The scope of this penetration test was limited strictly to the **registration functionality** of the Booking System application.  
-No other pages, endpoints, or system components were tested.
+**Scope:**
+- **Tested components:** Registration page and related backend logic (form submission, input validation, role assignment, email uniqueness)
+- **Exclusions:** All other application features (login, booking, profile management, admin panel, etc.)
+- **Test approach:** Manual Black-box testing
 
----
+**Test environment & dates:**
+- **Start:** Not specified
+- **End:** Not specified
+- **Test environment details (OS, runtime, DB, browsers):**  
+  Pop!_OS (Linux), Docker Compose deployment, Mozilla Firefox browser
 
-## Test Environment
-- Application: Booking System (Phase 1 – Part 1)
-- Deployment Method: Docker Compose
-- Operating System: Pop!_OS (Linux)
-- Browser: Mozilla Firefox
-- Testing Methodology: Manual black-box testing
-
----
-
-## Test Case 1: Missing Input Validation Feedback
-
-### Description
-The registration form does not provide any user feedback when required fields are left empty or invalid data is entered.
-
-### Steps to Reproduce
-1. Open the registration page.
-2. Submit the form without filling in any fields.
-
-### Expected Result
-The system should display clear validation error messages indicating missing or invalid input.
-
-### Actual Result
-The form submission does nothing and no error or validation message is displayed.
-
-### Impact
-Lack of validation feedback reduces usability and may conceal backend validation weaknesses from users and administrators.
-
-### Severity
-Low
+**Assumptions & constraints:**
+- Testing performed strictly on the registration endpoint/functionality
+- No source code access (pure black-box)
+- No pre-existing accounts or special credentials required
 
 ---
 
-## Test Case 2: Invalid Email Input Without Feedback
+# 2️⃣ Executive Summary
 
-### Description
-The application prevents submission when an invalid email format is entered but provides no error message to the user.
+**Short summary (1-2 sentences):**  
+Manual black-box testing of the Booking System registration functionality exposed critical security flaws — most notably the ability for anyone to self-register as an **administrator** — along with weak password controls, improper input handling, and flawed email uniqueness checks.
 
-### Steps to Reproduce
-1. Open the registration page.
-2. Enter `abc` as the email address.
-3. Fill other fields with valid data.
-4. Submit the form.
+**Overall risk level:** High
 
-### Expected Result
-The system should reject the invalid email and display an appropriate error message.
-
-### Actual Result
-The form does not submit and no feedback or error message is shown.
-
-### Impact
-Users are not informed why the submission failed, leading to confusion and poor error handling.
-
-### Severity
-Low
+**Top 5 immediate actions:**
+1. **Immediately remove** the administrator role option from the public registration form or implement strict authorization controls
+2. Enforce a **strong password policy** (minimum length 12+, complexity rules, block common/weak passwords)
+3. Add **maximum length restrictions** on password and other free-text fields (e.g. 128–255 characters max)
+4. Normalize emails to lowercase and enforce **case-insensitive uniqueness** during registration
+5. Implement **clear client-side and server-side validation messages** for all required/invalid inputs
 
 ---
 
-## Test Case 3: Weak Password Policy Enforcement
+# 3️⃣ Severity scale & definitions
 
-### Description
-The application allows users to register using extremely weak passwords.
-
-### Steps to Reproduce
-1. Enter a valid email address.
-2. Enter the password `123`.
-3. Fill other required fields with valid data.
-4. Submit the registration form.
-
-### Expected Result
-The system should enforce minimum password complexity requirements.
-
-### Actual Result
-The registration succeeds using a very weak password.
-
-### Impact
-Weak passwords significantly increase the risk of unauthorized account access.
-
-### Severity
-Medium
+| **Severity Level** | **Description**                                                                                  | **Recommended Action**            |
+|--------------------|--------------------------------------------------------------------------------------------------|------------------------------------|
+| 🔴 **High**        | A serious vulnerability that can lead to full system compromise or data breach (e.g., privilege escalation, RCE). | *Immediate fix required*          |
+| 🟠 **Medium**      | A significant issue that may require specific conditions or user interaction (e.g., weak auth controls). | *Fix ASAP*                        |
+| 🟡 **Low**         | A minor issue or configuration weakness (e.g., poor UX, missing feedback).                      | *Fix soon*                        |
+| 🔵 **Info**        | No direct risk, but useful for system hardening (e.g., missing headers).                        | *Monitor and fix in maintenance*  |
 
 ---
 
-## Test Case 4: Missing Input Length Restriction for Password
+# 4️⃣ Findings
 
-### Description
-The registration form does not enforce reasonable length limits on password input.
+| ID   | Severity   | Finding                                           | Description                                                                                   | Evidence / Proof                                      |
+|------|------------|---------------------------------------------------|-----------------------------------------------------------------------------------------------|-------------------------------------------------------|
+| F-01 | 🔴 High    | Unrestricted Administrator Role Assignment        | Any unauthenticated user can select and register with the `administrator` role               | Registration form allows selecting "administrator" role and succeeds |
+| F-02 | 🟠 Medium  | Weak Password Policy Enforcement                  | Extremely weak passwords (e.g. "123") are accepted without any complexity requirements       | Registration succeeds with password "123"             |
+| F-03 | 🟠 Medium  | No Input Length Restriction on Password           | Passwords longer than 200 characters are accepted                                             | Registration succeeds with >200 character password    |
+| F-04 | 🟠 Medium  | Case-Sensitive Email Uniqueness Check             | Same email address with different casing (e.g. Test@mail.com vs test@mail.com) can be registered multiple times | Two accounts created successfully with same email (different case) |
+| F-05 | 🟡 Low     | Missing Client-Side & Server-Side Validation Feedback | No error messages are displayed for empty fields, invalid email formats, or other failures — form simply does nothing | Form submission with empty/invalid data shows no feedback |
 
-### Steps to Reproduce
-1. Enter a valid email address.
-2. Enter a password longer than 200 characters.
-3. Submit the registration form.
-
-### Expected Result
-The system should reject excessively long password inputs.
-
-### Actual Result
-The registration succeeds with a password exceeding 200 characters.
-
-### Impact
-Lack of length restrictions may lead to performance issues or potential denial-of-service risks.
-
-### Severity
-Medium
+> [!NOTE]  
+> These represent the five most important issues identified during manual testing.
 
 ---
 
-## Test Case 5: Case-Sensitive Email Uniqueness Validation
+# 5️⃣ OWASP ZAP Test Report (Attachment)
 
-### Description
-Email uniqueness checks are case-sensitive, allowing multiple accounts to be created for the same email address using different letter casing.
 
-### Steps to Reproduce
-1. Register an account using `Test@mail.com`.
-2. Register another account using `test@mail.com`.
-
-### Expected Result
-The system should treat email addresses as case-insensitive and reject duplicate registrations.
-
-### Actual Result
-Both registrations are accepted successfully.
-
-### Impact
-This flaw allows duplicate accounts for the same email address, which may be abused for privilege escalation or account misuse.
-
-### Severity
-Medium
-
----
-
-## Test Case 6: Unrestricted Administrator Role Assignment
-
-### Description
-The registration form allows any user to self-register with the administrator role without authorization checks.
-
-### Steps to Reproduce
-1. Open the registration page.
-2. Select role `administrator`.
-3. Enter valid email, password, and date.
-4. Submit the form.
-
-### Expected Result
-Administrator role assignment should be restricted to authorized users or require approval by an existing administrator.
-
-### Actual Result
-The registration succeeds with administrator privileges without any restriction.
-
-### Impact
-This vulnerability enables privilege escalation and could lead to full compromise of the application.
-
-### Severity
-High
-
----
-
-## Summary
-Manual penetration testing of the Booking System registration functionality revealed multiple security weaknesses.  
-The most critical issue identified was unrestricted administrator role assignment, which enables privilege escalation.  
-Additional findings included weak password enforcement, improper input validation feedback, and flawed email uniqueness handling.  
-These issues should be addressed to improve the security and reliability of the system.
-
----
+https://github.com/JannatulTusy/tusyrepo/blob/main/BookingSystemP01/zap_report_round1.md
